@@ -1,22 +1,4 @@
---[[ Copyright 2014 Google Inc.
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-]]
-
-
--- This file defines the alewrap.GameScreen class.
+-- This file defines the neswrap.GameScreen class.
 
 --[[ The GameScreen class is designed to efficiently combine a fixed number
 of consecutive images of identical dimensions coming in a sequence
@@ -32,8 +14,10 @@ missing such game elements.
 The GameScreen class allows users to `paint` individual frames on a simulated
 screen and then `grab` the mean/max/etc of the last N painted frames. The
 default configuration will return the mean over the last two consecutive frames.
+
+For neswrap, we change the default to 1.
 ]]
-local gameScreen = torch.class('alewrap.GameScreen')
+local gameScreen = torch.class('neswrap.GameScreen')
 
 
 -- Create a game screen with an empty frame buffer.
@@ -83,7 +67,7 @@ function gameScreen:reset(_params, _gpu)
         self.poolType   = _params['type'] or self.poolType
     end
     --- old parameters take precedence over defaults
-    self.bufferSize = self.bufferSize   or 2
+    self.bufferSize = self.bufferSize   or 1 -- Changed to 1 from alewrap.
     self.poolType   = self.poolType     or 'mean'
     self.gpu        = self.gpu          or -1
 end

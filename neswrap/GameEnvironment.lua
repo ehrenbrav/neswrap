@@ -1,24 +1,7 @@
---[[ Copyright 2014 Google Inc.
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-]]
-
--- This file defines the alewrap.GameEnvironment class.
+-- This file defines the neswrap.GameEnvironment class.
 
 -- The GameEnvironment class.
-local gameEnv = torch.class('alewrap.GameEnvironment')
+local gameEnv = torch.class('neswrap.GameEnvironment')
 
 
 function gameEnv:__init(_opt)
@@ -28,7 +11,7 @@ function gameEnv:__init(_opt)
     self.verbose        = _opt.verbose or 0
     self._actrep        = _opt.actrep or 1
     self._random_starts = _opt.random_starts or 1
-    self._screen        = alewrap.GameScreen(_opt.pool_frms, _opt.gpu)
+    self._screen        = neswrap.GameScreen(_opt.pool_frms, _opt.gpu)
     self:reset(_opt.env, _opt.env_params, _opt.gpu)
     return self
 end
@@ -62,7 +45,7 @@ function gameEnv:reset(_env, _params, _gpu)
     end
     env = _env or env or 'ms_pacman'
 
-    self.game       = alewrap.game(env, params, self.game_path)
+    self.game       = neswrap.game(env, params, self.game_path)
     self._actions   = self:getActions()
 
     -- start the game

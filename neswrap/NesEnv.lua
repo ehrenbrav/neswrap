@@ -1,23 +1,5 @@
---[[ Copyright 2014 Google Inc.
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-]]
-
-
-function alewrap.createEnv(romName, extraConfig)
-    return alewrap.AleEnv(romName, extraConfig)
+function neswrap.createEnv(romName, extraConfig)
+    return neswrap.NesEnv(romName, extraConfig)
 end
 
 local RAM_LENGTH = 128
@@ -40,7 +22,7 @@ local function updateDefaults(dst, src)
     update(dst, src)
 end
 
-local Env = torch.class('alewrap.AleEnv')
+local Env = torch.class('neswrap.NesEnv')
 function Env:__init(romPath, extraConfig)
     self.config = {
         -- An additional reward signal can be provided
@@ -56,9 +38,9 @@ function Env:__init(romPath, extraConfig)
     updateDefaults(self.config, extraConfig)
 
     self.win = nil
-    self.ale = alewrap.newAle(romPath)
-    local width = self.ale:getScreenWidth()
-    local height = self.ale:getScreenHeight()
+    self.nes = neswrap.newNes(romPath)
+    local width = self.nes:getScreenWidth()
+    local height = self.nes:getScreenHeight()
     local obsShapes = {{height, width}}
     if self.config.enableRamObs then
         obsShapes={{height, width}, {RAM_LENGTH}}
@@ -78,7 +60,7 @@ end
 -- Returns a list of observations.
 -- The integer palette values are returned as the observation.
 function Env:envStart()
-    self.ale:resetGame()
+    self.nes:resetGame()
     return self:_generateObservations()
 end
 
@@ -90,33 +72,33 @@ function Env:envStep(actions)
     assert(#actions == 1, "one action is expected")
     assert(actions[1]:nElement() == 1, "one discrete action is expected")
 
-    if self.ale:isGameOver() then
-        self.ale:resetGame()
+    if self.nes:isGameOver() then
+        self.nes:resetGame()
         -- The first screen of the game will be also
         -- provided as the observation.
         return self.config.gameOverReward, self:_generateObservations()
     end
 
-    local reward = self.ale:act(actions[1][1])
+    local reward = self.nes:act(actions[1][1])
     return reward, self:_generateObservations()
 end
 
 function Env:getRgbFromPalette(obs)
-    return alewrap.getRgbFromPalette(obs)
+    return neswrap.getRgbFromPalette(obs)
 end
 
 function Env:_createObs()
     -- The torch.data() function is provided by torchffi.
-    local width = self.ale:getScreenWidth()
-    local height = self.ale:getScreenHeight()
+    local width = self.nes:getScreenWidth()
+    local height = self.nes:getScreenHeight()
     local obs = torch.ByteTensor(height, width)
-    self.ale:fillObs(torch.data(obs), obs:nElement())
+    self.nes:fillObs(torch.data(obs), obs:nElement())
     return obs
 end
 
 function Env:_createRamObs()
     local ram = torch.ByteTensor(RAM_LENGTH)
-    self.ale:fillRamObs(torch.data(ram), ram:nElement())
+    self.nes:fillRamObs(torch.data(ram), ram:nElement())
     return ram
 end
 
@@ -142,37 +124,37 @@ function Env:_generateObservations()
 end
 
 function Env:saveState()
-    self.ale:saveState()
+    self.nes:saveState()
 end
 
 function Env:loadState()
-    return self.ale:loadState()
+    return self.nes:loadState()
 end
 
 function Env:actions()
-    local nactions = self.ale:numActions()
+    local nactions = self.nes:numActions()
     local actions = torch.IntTensor(nactions)
-    self.ale:actions(torch.data(actions), actions:nElement())
+    self.nes:actions(torch.data(actions), actions:nElement())
     return actions
 end
 
 function Env:lives()
-    return self.ale:lives()
+    return self.nes:lives()
 end
 
 function Env:saveSnapshot()
-    return self.ale:saveSnapshot()
+    return self.nes:saveSnapshot()
 end
 
 function Env:restoreSnapshot(snapshot)
-    self.ale:restoreSnapshot(snapshot)
+    self.nes:restoreSnapshot(snapshot)
 end
 
 function Env:getScreenWidth()
-  return self.ale:getScreenWidth()
+  return self.nes:getScreenWidth()
 end
 
 function Env:getScreenHeight()
-  return self.ale:getScreenHeight()
+  return self.nes:getScreenHeight()
 end
 

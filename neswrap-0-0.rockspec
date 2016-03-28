@@ -1,4 +1,4 @@
-package = 'alewrap'
+package = 'neswrap'
 version = '0-0'
 
 source = {
@@ -6,10 +6,10 @@ source = {
 }
 
 description = {
-  summary = "Alewrap"
+  summary = "neswrap"
 }
 
-dependencies = { 'xitari','image','paths'}
+dependencies = { 'fceux','image','paths'}
 build = {
    type = "command",
    build_command = [[

@@ -3,7 +3,7 @@ CMAKE_POLICY(VERSION 2.6)
 
 FILE(GLOB src *.cc *.h)
 FILE(GLOB luasrc *.lua)
-SET(luasrc ${luasrc} alewrap.inl)
+SET(luasrc ${luasrc} neswrap.inl)
 
 MESSAGE(STATUS "CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}")
 MESSAGE(STATUS "TORCH_INSTALL_PREFIX ${TORCH_INSTALL_PREFIX}")
@@ -15,10 +15,12 @@ IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftemplate-depth=1024")
     MESSAGE(STATUS "FLAGS ${CMAKE_CXX_FLAGS}")
 # Using GCC.
+
+# DEBUG - adding debug symbols and deleting -O3
 ELSEIF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     MESSAGE(STATUS "Using GCC")
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")        ## Optimize
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")        ## Optimize
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")        ## Optimize 
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")        ## Optimize
     MESSAGE(STATUS "FLAGS ${CMAKE_CXX_FLAGS}")
 # Using Intel C++.
 ELSEIF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
@@ -29,10 +31,9 @@ ELSEIF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 ENDIF()
 
 
-# We are building alewraplib.
-# We specify the paths to ALE includes and libale.
+# We specify the paths to includes and library.
 # INCLUDE_DIRECTORIES(${Torch_SOURCE_INCLUDES})
-find_path(XITARI_INCLUDE_DIR xitari/ale_interface.hpp
+find_path(FCEUX_INCLUDE_DIR fceux/nes_interface.hpp
           HINTS 
           ${TORCH_INSTALL_PREFIX}/include
           ${CMAKE_INSTALL_PREFIX}/include
@@ -40,42 +41,45 @@ find_path(XITARI_INCLUDE_DIR xitari/ale_interface.hpp
           ${LUAROCKS_INSTALL_PREFIX}/../../../../../include
           PATH_SUFFIXES include)
 
-find_path(XITARI_LIBRARY_DIR NAMES xitari libxitari.a
+find_path(FCEUX_LIBRARY_DIR NAMES libfceux.so
           HINTS 
           ${TORCH_INSTALL_PREFIX}/lib 
           ${CMAKE_INSTALL_PREFIX}/lib
           ${CMAKE_INSTALL_PREFIX}/../../../../../lib 
           ${LUAROCKS_INSTALL_PREFIX}/../../../../../lib)
 
-find_library(XITARI_LIBRARY NAMES xitari libxitari.a
+find_library(FCEUX_LIBRARY NAMES libfceux.so
           HINTS 
           ${TORCH_INSTALL_PREFIX}/lib 
           ${CMAKE_INSTALL_PREFIX}/lib
           ${CMAKE_INSTALL_PREFIX}/../../../../../lib 
           ${LUAROCKS_INSTALL_PREFIX}/../../../../../lib)
 
-IF(NOT(XITARI_INCLUDE_DIR))
-  MESSAGE(ERROR "Could not find Xitari include location")
+IF(NOT(FCEUX_INCLUDE_DIR))
+  MESSAGE(ERROR "Could not find fceux include location")
 ENDIF()
 
-IF(NOT(XITARI_LIBRARY_DIR))
-  MESSAGE(ERROR "Could not find Xitari library")
+IF(NOT(FCEUX_LIBRARY_DIR))
+  MESSAGE(ERROR "Could not find fceux library")
 ENDIF()
 
-IF(NOT(XITARI_LIBRARY))
-  MESSAGE(ERROR "Could not find Xitari library")
+IF(NOT(FCEUX_LIBRARY))
+  MESSAGE(ERROR "Could not find fceux library")
 ENDIF()
 
-SET(INCDIR "${XITARI_INCLUDE_DIR}")
-SET(LIBDIR "${XITARI_LIBRARY_DIR}")
+SET(INCDIR "${FCEUX_INCLUDE_DIR}")
+SET(LIBDIR "${FCEUX_LIBRARY_DIR}")
 
 INCLUDE_DIRECTORIES("${INCDIR}")
 LINK_DIRECTORIES("${LIBDIR}")
 
-ADD_TORCH_PACKAGE(alewrap "${src}" "${luasrc}" "ALE Wrapper")
-TARGET_LINK_LIBRARIES(alewrap ${XITARI_LIBRARY})
+ADD_TORCH_PACKAGE(neswrap "${src}" "${luasrc}" "NES Wrapper")
+TARGET_LINK_LIBRARIES(neswrap ${FCEUX_LIBRARY})
 
-# INCLUDE_DIRECTORIES(../../xiborg/xitari)
-# LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../xiborg/xitari/build)
-# ADD_LIBRARY(alewraplib SHARED ${libsrc})
-# TARGET_LINK_LIBRARIES(alewraplib xitari z)
+
+
+
+
+
+
+
