@@ -83,6 +83,11 @@ function game:lives()
     return self.env:lives()
 end
 
+-- Ugly chain of function calls :(
+function game:resetGame()
+    self.env:resetGame()
+end
+
 
 --[[
 Parameters:

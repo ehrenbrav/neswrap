@@ -142,6 +142,10 @@ function Env:lives()
     return self.nes:lives()
 end
 
+function Env:resetGame()
+    self.nes:resetGame()
+end 
+
 function Env:saveSnapshot()
     return self.nes:saveSnapshot()
 end

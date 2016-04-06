@@ -107,17 +107,10 @@ function gameEnv:step(action, training)
 end
 
 
---[[ Function advances the emulator state until a new game starts and returns
-this state. The new game may be a different one, in the sense that playing back
-the exact same sequence of actions will result in different outcomes.
-]]
+-- Reset the game from the beginning.
 function gameEnv:newGame()
-    local obs, reward, terminal
-    terminal = self._state.terminal
-    while not terminal do
-        obs, reward, terminal, lives = self:_randomStep()
-    end
     self._screen:clear()
+    self.game:resetGame()
     -- take one null action in the new game
     return self:_updateState(self:_step(0)):getState()
 end
