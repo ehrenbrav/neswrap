@@ -11,6 +11,7 @@ function gameEnv:__init(_opt)
     self.verbose        = _opt.verbose or 0
     self._actrep        = _opt.actrep or 1
     self._random_starts = _opt.random_starts or 1
+    self.gameOverPenalty = _opt.gameOverPenalty or 0
     self._screen        = neswrap.GameScreen(_opt.pool_frms, _opt.gpu)
     self:reset(_opt.env, _opt.env_params, _opt.gpu)
     return self
@@ -97,6 +98,9 @@ function gameEnv:step(action, training)
         -- We assume that a "life" IS an episode during training, but not during testing
         if training and lives and lives < self._state.lives then
             terminal = true
+            
+            -- Insert the game over reward if necessary.
+            cumulated_reward = cumulated_reward + self.gameOverPenalty
         end
 
         -- game over, no point to repeat current action
