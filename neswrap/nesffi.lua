@@ -36,6 +36,7 @@ mt.saveState = lib.nes_saveState
 mt.numActions = lib.nes_numLegalActions
 mt.actions = lib.nes_legalActions
 mt.lives = lib.nes_livesRemaining
+mt.getCurrentScore = lib.nes_getCurrentScore
 
 mt.restoreSnapshot = function(self, snapshot)
     lib.nes_restoreSnapshot(self, snapshot, #snapshot)

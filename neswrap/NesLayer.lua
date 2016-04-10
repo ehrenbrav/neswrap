@@ -88,6 +88,10 @@ function game:resetGame()
     self.env:resetGame()
 end
 
+function game:getCurrentScore()
+    return self.env.nes:getCurrentScore()
+end
+
 
 --[[
 Parameters:

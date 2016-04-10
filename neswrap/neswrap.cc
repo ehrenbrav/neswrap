@@ -44,6 +44,10 @@ int nes_getScreenHeight(const NESInterface *nes) {
   return nes->getScreenHeight();
 }
 
+int nes_getCurrentScore(const NESInterface *nes) {
+	return nes->getCurrentScore();
+}
+
 bool nes_isGameOver(NESInterface *nes) { return nes->gameOver(); }
 
 void nes_resetGame(NESInterface *nes) {

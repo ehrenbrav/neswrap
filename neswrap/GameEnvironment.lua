@@ -99,8 +99,10 @@ function gameEnv:step(action, training)
         if training and lives and lives < self._state.lives then
             terminal = true
             
-            -- Insert the game over reward if necessary.
-            cumulated_reward = cumulated_reward + self.gameOverPenalty
+            -- Subtract out the current score from the reward.
+            if self.gameOverPenalty then
+              cumulated_reward = cumulated_reward - self.game:getCurrentScore()
+            end
         end
 
         -- game over, no point to repeat current action

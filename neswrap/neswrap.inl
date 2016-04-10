@@ -21,6 +21,9 @@ int nes_getScreenWidth(const NESInterface *nes);
 // Returns the screen height.
 int nes_getScreenHeight(const NESInterface *nes);
 
+// Returns the current score.
+int nes_getCurrentScore(const NESInterface *nes);
+
 // Indicates whether the game ended.
 // Call resetGame to restart the game.
 //
