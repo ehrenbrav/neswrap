@@ -100,7 +100,7 @@ function gameEnv:step(action, training)
             terminal = true
             
             -- Subtract out the current score from the reward.
-            if self.gameOverPenalty then
+            if self.gameOverPenalty > 0 then
               cumulated_reward = cumulated_reward - self.game:getCurrentScore()
             end
         end
