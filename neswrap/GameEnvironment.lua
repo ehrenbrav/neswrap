@@ -99,9 +99,9 @@ function gameEnv:step(action, training)
         if training and lives and lives < self._state.lives then
             terminal = true
             
-            -- Subtract out the current score from the reward.
+            -- Penalty for getting killed.
             if self.gameOverPenalty > 0 then
-              cumulated_reward = cumulated_reward - self.game:getCurrentScore()
+              cumulated_reward = cumulated_reward - 10000
             end
         end
 
