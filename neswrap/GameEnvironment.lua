@@ -101,7 +101,8 @@ function gameEnv:step(action, training)
             
             -- Penalty for getting killed.
             if self.gameOverPenalty > 0 then
-              cumulated_reward = cumulated_reward - 10000
+              -- cumulated_reward = cumulated_reward - self.game:getCurrentScore()
+              cumulated_reward = -1000
             end
         end
 
