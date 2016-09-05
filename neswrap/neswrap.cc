@@ -31,9 +31,9 @@ void nes_gc(NESInterface *nes) { delete nes; }
 
 double nes_act(NESInterface *nes, int action) {
 
-  assert(action >= static_cast<int>(nes::NOOP) &&
-         action <= static_cast<int>(nes::B_DOWN));
-  return nes->act(static_cast<nes::Action>(action));
+  assert(action >= static_cast<int>(nes::ACT_NOOP) &&
+         action <= static_cast<int>(nes::ACT_B_DOWN));
+  return nes->act(action);
 }
 
 int nes_getScreenWidth(const NESInterface *nes) {
@@ -59,28 +59,23 @@ bool nes_loadState(NESInterface *nes) { return nes->loadState(); }
 
 void nes_saveState(NESInterface *nes) { nes->saveState(); }
 
-void nes_fillObs(const NESInterface *nes, uint8_t *obs, size_t obs_size) {
+void nes_fillObs(NESInterface *nes, unsigned char *obs, int obs_size) {
 
 	// Copy the contents of the screen (XBuf) to obs.
-	const uint8_t *screen = nes->getScreen();
 	int width = nes->getScreenWidth();
 	int height = nes->getScreenHeight();
 	assert(obs_size == height * width);
-
-	std::copy(screen, screen + obs_size, obs);
+	nes->getScreen(obs, obs_size);
 }
 
 int nes_numLegalActions(NESInterface *nes) {
 	return nes->getNumLegalActions();
 }
 
-void nes_legalActions(NESInterface *nes, int *actions, size_t actions_size) {
+void nes_legalActions(NESInterface *nes, int actions[], size_t actions_size) {
 
-	nes::ActionVect actions_vec = nes->getLegalActionSet();
-	assert(actions_vec.size() == actions_size);
-	for (int i = 0; i < actions_size; i++) {
-		actions[i] = actions_vec[i];
-	}
+	assert(nes->numLegalActions == actions_size);
+	nes->getLegalActionSet(actions);
 }
 
 int nes_livesRemaining(const NESInterface *nes) {

@@ -44,7 +44,7 @@ bool nes_loadState(NESInterface *nes);
 //
 // Currently, the palette values are even numbers from 0 to 255.
 // So there are only 128 distinct values.
-void nes_fillObs(const NESInterface *nes, uint8_t *obs, size_t obs_size);
+void nes_fillObs(NESInterface *nes, unsigned char *obs, int obs_size);
 
 // Fills the given array with the content of the RAM.
 // The obs_size should be 128.
@@ -54,7 +54,7 @@ void nes_fillRamObs(const NESInterface *nes, uint8_t *obs, size_t obs_size);
 int nes_numLegalActions(NESInterface *nes);
 
 // Returns the valid actions for a game
-void nes_legalActions(NESInterface *nes, int *actions, size_t size);
+void nes_legalActions(NESInterface *nes, int actions[], size_t size);
 
 // Returns the number of remaining lives for a game
 int nes_livesRemaining(const NESInterface *nes);
