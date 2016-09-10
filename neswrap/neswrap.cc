@@ -15,7 +15,7 @@ void nes_fillRgbFromPalette(uint8_t *rgb, const uint8_t *obs, size_t rgb_size,
 
   for (int index = 0ul; index < obs_size; ++index) {
     uint8_t r, g, b;
-    NESInterface::getRGB(obs[index], r, g, b);
+    NESInterface::getRGB(obs[index], &r, &g, &b);
 
     rgb[r_offset + index] = r;
     rgb[g_offset + index] = g;
